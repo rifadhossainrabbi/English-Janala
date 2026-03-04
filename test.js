@@ -5,3 +5,4 @@ const creatElements = (arr) => {
 
 const synonyms = ["hello", "hi", "konnichiwa"];
 creatElements(synonyms);
+
