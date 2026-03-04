@@ -1,3 +1,10 @@
+const creatElements = (arr) => {
+  const htmlElements = arr.map((el) => `<span class="btn">${el}</span>`);
+  return (htmlElements.join(" "));
+}
+
+
+
 const loadLessons = () => {
   fetch("https://openapi.programming-hero.com/api/levels/all")//promise of response
     .then(res => res.json()) // promise of json data
@@ -24,6 +31,38 @@ const loadLevelWord = (id) => {
     });
 };
 
+// fetch er por jeno then then na dawa lage tai ei khane (async,await) likhe dawa holo
+const loadWordDetail = async (id) => {
+  const url = `https://openapi.programming-hero.com/api/word/${id}`;
+  console.log(url);
+  const res = await fetch(url);
+  const details = await res.json();
+  displayWordDetails(details.data);
+}
+
+const displayWordDetails = (word) => {
+  console.log(word);
+  const detailsBox = document.getElementById("details_container");
+  detailsBox.innerHTML = `
+  <div class="">
+          <h2 class="text-2xl font-bold">${word.word} (<i class="fa-solid fa-microphone-lines"></i> :${word.pronunciation})</h2>
+        </div>
+        <div class="">
+          <h2 class="font-bold">Meaning</h2>
+          <p>${word.meaning}</p>
+        </div>
+        <div class="">
+          <h2 class="font-bold">Example</h2>
+          <p>${word.sentence}</p>
+        </div>
+        <div class="">
+          <h2 class="font-bold">Synonyms</h2>
+            <div class="">${creatElements(word.synonyms)}</div>
+        </div>
+  `;
+  document.getElementById("word_modal").showModal();
+}
+
 const displayLevelWord = (words) => {
   const wordContainer = document.getElementById("word_container");
   wordContainer.innerHTML = "";
@@ -49,7 +88,7 @@ const displayLevelWord = (words) => {
       <p class="font-semibold">Meaning /Pronounciation</p>
       <div class="text-2xl font-medium font_family_bangla">"${word.meaning ? word.meaning : "অর্থ পাওয়া যায়নি"} / ${word.pronunciation ? word.pronunciation : "Pronunciation পাওয়া যায়নি"}"</div>
       <div class="flex justify-between items-center mt-5">
-        <button onclick="my_modal_5.showModal()" class="btn bg-[#1A91FF10] hover:bg-[#1A91FF]"><i class="fa-solid fa-circle-info"></i></button>
+        <button onclick="loadWordDetail(${word.id})" class="btn bg-[#1A91FF10] hover:bg-[#1A91FF]"><i class="fa-solid fa-circle-info"></i></button>
         <btutton class="btn  bg-[#1A91FF10] hover:bg-[#1A91FF]"><i class="fa-solid fa-volume-high"></i></btutton>
       </div>
     </div>
